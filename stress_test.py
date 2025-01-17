@@ -2,6 +2,8 @@ import subprocess
 import time
 import tracemalloc
 import structure_generator
+import random
+import string
 
 
 # Function to run .exe program and get output, exit code, elapsed time, and memory usage
@@ -40,8 +42,8 @@ def get_output_py(path: str, input_data: str):
     return rn_output, exit_code, elapsed_time, peak
 
 
-path_to_correct = ''
-path_to_incorrect = ''
+path_to_correct = ""
+path_to_incorrect = ""
 max_time_correct = 0
 max_time_incorrect = 0
 max_memory_correct = 0
@@ -51,9 +53,14 @@ max_time_test_incorrect = ''
 max_memory_test_correct = ''
 max_memory_test_incorrect = ''
 
+
+def gen_test():
+    pass
+
+
 with open("stress.logs", 'w') as log_file:
-    for test_number in range(None):  # Replace None with the number of tests
-        input_data = ''  # Generate your input data structure (use functions from structure_generator.py)
+    for test_number in range(10000):  # Replace None with the number of tests
+        input_data = gen_test()
         correct_solution = get_output_exe(path_to_correct, input_data)
         incorrect_solution = get_output_exe(path_to_incorrect, input_data)
 
@@ -61,17 +68,21 @@ with open("stress.logs", 'w') as log_file:
         incorrect_output, incorrect_ecode, incorrect_time, incorrect_memory = incorrect_solution
 
         if correct_ecode != 0:
-            log_file.write(f'{path_to_correct} finished with exit code {correct_ecode}\n')
+            print(f'RE {test_number}\n', f'Test data:\n{input_data}\n', f'Correct output:\n{correct_output}\n',
+                  f'Incorrect output:\n{incorrect_output}\n', sep='\n')
+            break
 
-        if correct_output == incorrect_output:
-            log_file.write(f'OK {test_number}\n')
+        cor = True
+        if correct_output != incorrect_output:
+            cor = False
+        if cor:
+            print('OK')
+            pass
         else:
-            log_file.write(f'WA {test_number}\n')
-            log_file.write(f'Test data: {input_data}\n')
-            log_file.write(f'Correct output: {correct_output}\n')
-            log_file.write(f'Incorrect output: {incorrect_output}\n')
+            print(f'WA {test_number}\n', f'Test data:\n{input_data}\n', f'Correct output:\n{correct_output}\n',
+                  f'Incorrect output:\n{incorrect_output}\n', sep='\n')
+            break
 
-        # Track maximum time and memory usage for correct solution
         if correct_time > max_time_correct:
             max_time_correct = correct_time
             max_time_test_correct = input_data
@@ -80,7 +91,6 @@ with open("stress.logs", 'w') as log_file:
             max_time_incorrect = incorrect_time
             max_time_test_incorrect = input_data
 
-        # Track maximum time and memory usage for incorrect solution
         if correct_memory > max_memory_correct:
             max_memory_correct = correct_memory
             max_memory_test_correct = input_data
@@ -89,12 +99,12 @@ with open("stress.logs", 'w') as log_file:
             max_memory_incorrect = incorrect_memory
             max_memory_test_incorrect = input_data
 
-    log_file.write(f'Max time for correct solution: {max_time_correct} seconds\n')
-    log_file.write(f'Test data for max time (correct solution): {max_time_test_correct}\n')
-    log_file.write(f'Max memory for correct solution: {max_memory_correct} bytes\n')
-    log_file.write(f'Test data for max memory (correct solution): {max_memory_test_correct}\n')
+print(f'Max time for correct solution: {max_time_correct} seconds')
+print(f'Test data for max time (correct solution): {max_time_test_correct}')
+print(f'Max memory for correct solution: {max_memory_correct} bytes')
+print(f'Test data for max memory (correct solution): {max_memory_test_correct}')
 
-    log_file.write(f'Max time for incorrect solution: {max_time_incorrect} seconds\n')
-    log_file.write(f'Test data for max time (incorrect solution): {max_time_test_incorrect}\n')
-    log_file.write(f'Max memory for incorrect solution: {max_memory_incorrect} bytes\n')
-    log_file.write(f'Test data for max memory (incorrect solution): {max_memory_test_incorrect}\n')
+print(f'Max time for incorrect solution: {max_time_incorrect} seconds')
+print(f'Test data for max time (incorrect solution): {max_time_test_incorrect}')
+print(f'Max memory for incorrect solution: {max_memory_incorrect} bytes')
+print(f'Test data for max memory (incorrect solution): {max_memory_test_incorrect}')

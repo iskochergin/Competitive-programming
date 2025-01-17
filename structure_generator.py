@@ -1,5 +1,7 @@
 import random
 from collections import defaultdict, deque
+from sys import setrecursionlimit
+setrecursionlimit(int(1e9))
 
 
 def generate_tree(n, root=None, weighted=False, min_weight=1, max_weight=100):
@@ -89,7 +91,11 @@ def generate_graph(n, m, oriented=False, weighted=False, cyclical=False, min_wei
     A string representing the graph with an adjacency list.
     """
     edges = set()
+    cnt = 0
     while len(edges) < m:
+        cnt += 1
+        if cnt > 900:
+            return False
         u = random.randint(1, n)
         v = random.randint(1, n)
         if u != v:
@@ -103,8 +109,8 @@ def generate_graph(n, m, oriented=False, weighted=False, cyclical=False, min_wei
             else:
                 edges.add((u, v))
 
-    if not is_connected_graph(n, edges, oriented):
-        return generate_graph(n, m, oriented, weighted, cyclical, min_weight, max_weight)
+    # if not is_connected_graph(n, edges, oriented):
+    #     return generate_graph(n, m, oriented, weighted, cyclical, min_weight, max_weight)
 
     result = f"{n} {m}\n"
     for edge in edges:
